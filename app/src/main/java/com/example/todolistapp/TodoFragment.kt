@@ -1,20 +1,27 @@
 package com.example.todolistapp
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todolistapp.databinding.FragmentTodoBinding
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-
+private const val RESULT_OK = -1
 
 class TodoFragment : Fragment() {
 
     private var _binding: FragmentTodoBinding? = null
     private val binding get() = _binding!!
+
+    private val todoListAdapter by lazy { TodoAdapter() }
+    private lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
     private var param1: String? = null
     private var param2: String? = null
@@ -38,11 +45,41 @@ class TodoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // initView()
+        initView()
     }
 
     private fun initView() {
+        setTodoAdapter()
+        onAddTodoFabPressed()
+        setResultLauncher()
+    }
 
+    private fun setTodoAdapter() {
+        binding.todoRecyclerView.apply {
+            adapter = todoListAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+        todoListAdapter.submitList(TodoManager.getTodoList())
+    }
+
+    private fun onAddTodoFabPressed() {
+        binding.addTodoFab.setOnClickListener {
+            val intent = Intent(activity, AddTodoActivity::class.java)
+            resultLauncher.launch(intent)
+        }
+    }
+
+    private fun setResultLauncher() {
+        resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                todoListAdapter.submitList(TodoManager.getTodoList())
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

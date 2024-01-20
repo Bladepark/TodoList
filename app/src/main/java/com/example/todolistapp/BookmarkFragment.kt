@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todolistapp.databinding.FragmentBookmarkBinding
 import com.example.todolistapp.databinding.FragmentTodoBinding
 
@@ -15,6 +16,8 @@ class BookmarkFragment : Fragment() {
 
     private var _binding: FragmentBookmarkBinding? = null
     private val binding get() = _binding!!
+
+    private val bookmarkAdapter by lazy { BookmarkAdapter() }
 
     private var param1: String? = null
     private var param2: String? = null
@@ -38,11 +41,18 @@ class BookmarkFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // initView()
+        initView()
     }
 
     private fun initView() {
+        setBookmarkAdapter()
+    }
 
+    private fun setBookmarkAdapter() {
+        binding.bookmarkRecyclerView.apply {
+            adapter = bookmarkAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
     }
 
     companion object {
