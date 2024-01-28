@@ -1,20 +1,21 @@
-package com.example.todolistapp
+package com.example.todolistapp.bookmark
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.todolistapp.todo.data.TodoModel
 import com.example.todolistapp.databinding.ItemBookmarkBinding
 
-class BookmarkAdapter: ListAdapter<TodoData, BookmarkAdapter.ViewHolder>(diffUtil) {
+class BookmarkAdapter: ListAdapter<TodoModel, BookmarkAdapter.ViewHolder>(diffUtil) {
     companion object {
-        private val diffUtil = object : DiffUtil.ItemCallback<TodoData>() {
-            override fun areItemsTheSame(oldItem: TodoData, newItem: TodoData): Boolean {
+        private val diffUtil = object : DiffUtil.ItemCallback<TodoModel>() {
+            override fun areItemsTheSame(oldItem: TodoModel, newItem: TodoModel): Boolean {
                 return oldItem == newItem
             }
 
-            override fun areContentsTheSame(oldItem: TodoData, newItem: TodoData): Boolean {
+            override fun areContentsTheSame(oldItem: TodoModel, newItem: TodoModel): Boolean {
                 return oldItem == newItem
             }
         }
@@ -32,7 +33,7 @@ class BookmarkAdapter: ListAdapter<TodoData, BookmarkAdapter.ViewHolder>(diffUti
 
     inner class ViewHolder(private val binding: ItemBookmarkBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(todo: TodoData) {
+        fun bind(todo: TodoModel) {
             with(binding) {
                 tvBookmarkTitle.text = todo.title
                 tvBookmarkDescription.text = todo.description

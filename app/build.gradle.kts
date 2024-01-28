@@ -53,4 +53,5 @@ dependencies {
 
     // Fragment
     implementation("androidx.fragment:fragment-ktx:1.6.2")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
 }
