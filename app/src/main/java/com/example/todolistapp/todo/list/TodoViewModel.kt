@@ -12,24 +12,17 @@ class TodoViewModel : ViewModel() {
     val uiState: LiveData<TodoUiState> get() = _uiState
 
 
-    fun updateBookmarkStatus(todoModel: TodoModel?) {
-        if (todoModel == null) {
+    fun updateBookmarkStatus(model: TodoModel?) {
+        if (model == null) {
             return
         }
-
-        val updatedList = uiState.value?.list?.map {
-            if (it.id == todoModel.id) {
-                it.copy(isBookmarked = !it.isBookmarked)
-            } else {
-                it
-            }
-        }
-        _uiState.value = uiState.value?.copy(list = updatedList.orEmpty())
+        _uiState.value = uiState.value?.copy(list = uiState.value?.list?.map {
+            if (it.id == model.id) it.copy(isBookmarked = !it.isBookmarked)
+            else it
+        }.orEmpty())
     }
 
-    private fun addTodoItem(
-        model: TodoModel?
-    ) {
+    private fun addTodoItem(model: TodoModel?) {
         if (model == null) {
             return
         }
@@ -44,27 +37,22 @@ class TodoViewModel : ViewModel() {
         if (model == null) {
             return
         }
-
-        val updatedList = uiState.value?.list?.map {
-            if (it.id == model.id) {
-                it.copy(
-                    title = model.title,
-                    description = model.description
-                )
-            } else {
-                it
-            }
+        model.let { updatedModel ->
+            _uiState.value =
+                uiState.value?.copy(list = uiState.value?.list?.map { if (it.id == updatedModel.id) updatedModel else it }
+                    .orEmpty())
         }
-        _uiState.value = uiState.value?.copy(list = updatedList.orEmpty())
     }
 
     private fun deleteTodoItem(model: TodoModel?) {
         if (model == null) {
             return
         }
-
-        val updatedList = uiState.value?.list?.filter { it.id != model.id }
-        _uiState.value = uiState.value?.copy(list = updatedList.orEmpty())
+        model.let { deletedModel ->
+            _uiState.value =
+                uiState.value?.copy(list = uiState.value?.list?.filter { it.id != deletedModel.id }
+                    .orEmpty())
+        }
     }
 
     fun processTodoItem(entryType: TodoContentType?, model: TodoModel?) {
